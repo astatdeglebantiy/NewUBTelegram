@@ -1,12 +1,14 @@
+import asyncio
 import importlib
 import config
 import pyrogram
 import command_manager
-import manager
+import classes
 import command_parser
 
-main_config = config.load_main_config()
-API_KEYS = config.load_api_keys()
+
+main_config = config.load(config.MAIN_CONFIG_PATH)
+API_KEYS = config.load(config.API_KEYS_PATH)
 
 DEFAULT_COMMAND_PREFIX = main_config['DEFAULT_COMMAND_PREFIX']
 
@@ -19,27 +21,58 @@ client = pyrogram.Client(
 )
 
 
+_manager = classes.Manager(None)
+
+
+async def dotted_message(message: pyrogram.types.Message):
+    frames = [".", "..", "..."]
+    i = 0
+    try:
+        while True:
+            await message.edit(f'{message.text}{frames[i % len(frames)]}')
+            i += 1
+            await asyncio.sleep(3)
+    except asyncio.CancelledError:
+        pass
+
+
 @client.on_message(pyrogram.filters.command(commands='reload', prefixes=DEFAULT_COMMAND_PREFIX) & pyrogram.filters.me)
 async def reload_command(_, message: pyrogram.types.Message):
-    new_message = await message.reply('Uno momento...')
+    new_message = await message.reply('Wait a minute')
+    dotted_task = asyncio.create_task(dotted_message(new_message))
     global main_config
-    importlib.reload(config)
-    importlib.reload(command_manager)
-    importlib.reload(command_parser)
-    main_config = config.load_main_config()
-    if _manager:
-        _manager.clear_handlers()
-        command_manager.register_handlers(client, _manager)
-        print(_manager.list_handlers())
-    await new_message.edit('Complete!')
+    try:
+        importlib.reload(config)
+        importlib.reload(command_manager)
+        importlib.reload(command_parser)
+        main_config = config.load(config.MAIN_CONFIG_PATH)
+        if _manager:
+            _manager.clear_handlers()
+            command_manager.register_handlers(client, _manager)
+            print(_manager.list_handlers())
+    except Exception as e:
+        if dotted_task:
+            dotted_task.cancel()
+            try:
+                await dotted_task
+            except asyncio.CancelledError:
+                pass
+            await new_message.edit(f'**Reload stopped with error:**```\n{e}```')
+            return
+    if dotted_task:
+        dotted_task.cancel()
+        try:
+            await dotted_task
+        except asyncio.CancelledError:
+            pass
+    await new_message.edit('**Reload complete!**')
 
-_manager = None
 
 async def main():
     global _manager
     await client.start()
     config.clear_temp()
-    _manager = manager.Manager(client)
+    _manager = classes.Manager(client)
     command_manager.register_handlers(client, _manager)
     print(_manager.list_handlers())
     await pyrogram.idle()

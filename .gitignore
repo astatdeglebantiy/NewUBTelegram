@@ -37,7 +37,9 @@ htmlcov/
 *.o
 
 configs/api_keys.json
-data/whitelist.json
+data/*
 
 *.session-journal
 *.session
+
+temp/*

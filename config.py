@@ -10,29 +10,25 @@ LEVEL_OF_ADMISSION_PATH = f'{DATA_PATH}levels_of_admission.json'
 WHITELIST_PATH = f'{DATA_PATH}whitelist.json'
 
 
-def load_main_config() -> dict:
-    try:
-        os.mkdir(CONFIGS_PATH)
-    except FileExistsError:
-        pass
-    with open(MAIN_CONFIG_PATH) as f:
+def load(path: str, dir_path: str | None = None):
+    if dir_path:
+        try:
+            os.mkdir(dir_path)
+        except FileExistsError:
+            pass
+    with open(path) as f:
         return json.load(f)
 
-def load_api_keys() -> dict:
-    try:
-        os.mkdir(CONFIGS_PATH)
-    except FileExistsError:
-        pass
-    with open(API_KEYS_PATH) as f:
-        return json.load(f)
 
-def load_levels_of_admission() -> dict[str, int]:
-    try:
-        os.mkdir(DATA_PATH)
-    except FileExistsError:
-        pass
-    with open(LEVEL_OF_ADMISSION_PATH) as f:
-        return json.load(f)
+def save(obj, path: str, dir_path: str | None = None):
+    if dir_path:
+        try:
+            os.mkdir(dir_path)
+        except FileExistsError:
+            pass
+    with open(path, 'w') as f:
+        return json.dump(obj, f)
+
 
 def load_whitelist() -> list[str]:
     try:
@@ -42,7 +38,7 @@ def load_whitelist() -> list[str]:
     try:
         with open(WHITELIST_PATH) as f:
             return json.load(f)
-    except Exception:
+    except FileExistsError:
         return []
 
 def save_whitelist(obj):
@@ -61,5 +57,5 @@ def clear_temp():
     for root, dirs, files in os.walk(TEMP_PATH, topdown=False):
         for file in files:
             os.remove(os.path.join(root, file))
-        for dir in dirs:
-            os.rmdir(os.path.join(root, dir))
+        for _dir in dirs:
+            os.rmdir(os.path.join(root, _dir))

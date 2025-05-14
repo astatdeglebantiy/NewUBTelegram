@@ -2,7 +2,7 @@ from google.genai.types import GenerateContentConfig
 import config
 from google import genai
 
-GEMINI_API_KEY = config.load_api_keys()['GEMINI_API']
+GEMINI_API_KEY = config.load(config.API_KEYS_PATH)['GEMINI_API']
 
 
 def generate_content(prompt: str | None = None, system_prompt: str | None = None, media: list[str] | None = None, model: str = 'gemini-2.0-flash', temperature: int = 1, api_key: str = GEMINI_API_KEY):

@@ -1,14 +1,14 @@
 import pyrogram
 import config
 import command_parser
-import manager
+import classes
 import status
 
-main_config = config.load_main_config()
+main_config = config.load(config.MAIN_CONFIG_PATH)
 DEFAULT_COMMAND_PREFIX = main_config['DEFAULT_COMMAND_PREFIX']
 
 
-def register_handlers(client: pyrogram.Client, _manager: manager.Manager):
+def register_handlers(client: pyrogram.Client, _manager: classes.Manager):
     async def is_in_whitelist(_, __, message) -> bool:
         if getattr(message, 'from_user'):
             if getattr(message.from_user, 'id'):

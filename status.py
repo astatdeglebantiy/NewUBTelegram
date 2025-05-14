@@ -9,6 +9,9 @@ import speedtest
 from pyrogram import types
 
 
+# ЭТОТ КОД НАПИСАН ЧАТОМГПТ, НЕ БЕЙТЕ МЕНЯ ПАЛКОЙ, ПОЖАЛУЙСТА!!!
+
+
 def get_cpu_temperature():
     system = platform.system()
     if system == 'Linux':
