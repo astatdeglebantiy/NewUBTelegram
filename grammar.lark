@@ -1,0 +1,22 @@
+%import common.CNAME
+%import common.ESCAPED_STRING
+%import common.WS
+%ignore WS
+
+?start: command
+
+command: PREFIX CNAME arg*
+arg: CNAME "=" value
+
+?value: func_call
+      | ESCAPED_STRING
+      | CNAME
+
+func_call: FUNCTION_PREFIX CNAME OPEN [arg_list] CLOSE
+arg_list: value (SEP value)*
+
+PREFIX: "="
+FUNCTION_PREFIX: "@!"
+SEP: "##"
+OPEN: "("
+CLOSE: ")"

@@ -35,11 +35,7 @@ class Manager:
 
 
 class Function:
-    def __init__(self, full_name: str, description: str, _callable: Callable):
+    def __init__(self, full_name: str, description: str, function: Callable):
         self.full_name = full_name
         self.description = description
-        self._callable = _callable
-
-    @property
-    def callable(self):
-        return self._callable
+        self.function = function

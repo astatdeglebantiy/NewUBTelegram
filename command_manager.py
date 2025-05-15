@@ -104,6 +104,7 @@ def register_handlers(client: pyrogram.Client, _manager: classes.Manager):
             except Exception as e:
                 await client.send_message(message.chat.id, f'```\n{str(e)}```')
                 return
+            print(parsed)
             text = parsed.get('text', None)
             if text:
                 me = await client.get_me()
