@@ -18,18 +18,18 @@ def get_cpu_temperature():
         try:
             temps = psutil.sensors_temperatures()
             if not temps:
-                return "🌡️ Температура: данные недоступны"
+                return "🌡️ Temperature: unknown"
             for name, entries in temps.items():
                 for entry in entries:
                     if entry.current:
-                        return f"🌡️ Температура {name}: {entry.current}°C"
-            return "🌡️ Температура: данные недоступны"
+                        return f"🌡️ Temperature {name}: {entry.current}°C"
+            return "🌡️ Temperature: unknown"
         except Exception as e:
-            return f"🌡️ Температура: ошибка при получении данных ({e})"
+            return f"🌡️ Temperature: unknown"
     elif system == 'Windows':
-        return f"🌡️ Температура: виндовс момент"
+        return f"🌡️ Temperature: windows moment"
     else:
-        return "🌡️ Температура: не поддерживается на этой платформе"
+        return "🌡️ Temperature: unknown"
 
 
 async def status_command(client, message: types.Message):
@@ -41,42 +41,42 @@ async def status_command(client, message: types.Message):
 
     message = await message.reply('Wait a minute...')
 
-    # Аптайм системы
+    # Uptime
     uptime_seconds = time.time() - psutil.boot_time()
     uptime_str = str(datetime.timedelta(seconds=int(uptime_seconds)))
-    status_lines.append(f"⏱️ Аптайм системы: {uptime_str}")
+    status_lines.append(f"⏱️ System uptime: {uptime_str}")
 
-    # Загрузка CPU & RAM
+    # CPU & RAM
     cpu_usage = psutil.cpu_percent(interval=1)
     ram_usage = psutil.virtual_memory().percent
-    status_lines.append(f"⚙️ Загрузка CPU: {cpu_usage}%")
-    status_lines.append(f"📈 Загрузка RAM: {ram_usage}%")
+    status_lines.append(f"⚙️ CPU: {cpu_usage}%")
+    status_lines.append(f"📈 RAM: {ram_usage}%")
 
-    # Температура
+    # Temperature
     status_lines.append(get_cpu_temperature())
 
-    # Свободное место на диске
+    # Free memory
     disk = psutil.disk_usage('/')
     status_lines.append(
-        f"💽 Диск: {round(disk.used / 1024 ** 3, 1)}ГБ / {round(disk.total / 1024 ** 3, 1)}ГБ ({disk.percent}%) занято")
+        f"💽 Disk: {round(disk.used / 1024 ** 3, 1)}GB / {round(disk.total / 1024 ** 3, 1)}GB ({disk.percent}%) busy")
 
-    # Проверка интернета
+    # Internet
     internet_available = False
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get('https://1.1.1.1', timeout=5):
                 internet_available = True
-                status_lines.append("🔌 Интернет: доступен")
+                status_lines.append("🔌 Internet: available")
     except Exception:
-        status_lines.append("🔌 Интернет: недоступен")
+        status_lines.append("🔌 Internet: not available")
 
-    # Локальный IP
+    # Local IP
     try:
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
-        status_lines.append(f"💻 Локальный IP: {local_ip}")
+        status_lines.append(f"💻 Local IP: {local_ip}")
     except Exception:
-        status_lines.append("💻 Локальный IP: не удалось определить")
+        status_lines.append("💻 Local IP: unknown")
 
     # Пинг
     if internet_available:
@@ -87,54 +87,54 @@ async def status_command(client, message: types.Message):
             writer.close()
             await writer.wait_closed()
             ping_ms = round((end - start) * 1000, 2)
-            status_lines.append(f"📡 Пинг до astatdeglebantiy.github.io: {ping_ms} мс")
+            status_lines.append(f"📡 Ping to astatdeglebantiy.github.io: {ping_ms} ms")
         except Exception:
-            status_lines.append("📡 Пинг до astatdeglebantiy.github.io: ошибка")
+            status_lines.append("📡 Ping to astatdeglebantiy.github.io: unknown")
     else:
-        status_lines.append("📡 Пинг до astatdeglebantiy.github.io: нет интернета")
+        status_lines.append("📡 Ping to astatdeglebantiy.github.io: no internet")
 
-    # Время
+    # Time
     utc_now = datetime.datetime.now(datetime.UTC)
     local_now = datetime.datetime.now()
-    status_lines.append(f"🕒 Время (UTC): {utc_now.strftime('%Y-%m-%d %H:%M:%S')}")
-    status_lines.append(f"🕒 Время (локальное): {local_now.strftime('%Y-%m-%d %H:%M:%S')}")
+    status_lines.append(f"🕒 Time (UTC): {utc_now.strftime('%Y-%m-%d %H:%M:%S')}")
+    status_lines.append(f"🕒 Time (local): {local_now.strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Местоположение
+    # Location
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get('http://ip-api.com/json/') as resp:
                 data = await resp.json()
                 if data['status'] == 'success':
                     location = f"{data['country']}, {data['regionName']}, {data['city']}"
-                    status_lines.append(f"📍 Местоположение: {location}")
+                    status_lines.append(f"📍 Location: {location}")
                 else:
-                    status_lines.append("📍 Местоположение: не удалось определить")
+                    status_lines.append("📍 Location: unknown")
     except Exception:
-        status_lines.append("📍 Местоположение: ошибка при получении данных")
+        status_lines.append("📍 Location: unknown")
 
-    # Системная информация
+    # System info
     try:
         uname = platform.uname()
         cpu_count = psutil.cpu_count(logical=True)
         ram = round(psutil.virtual_memory().total / (1024 ** 3), 2)
-        status_lines.append(f"🖥️ ОС: {uname.system} {uname.release} ({uname.machine})")
-        status_lines.append(f"🧠 CPU: {uname.processor} | Ядер: {cpu_count}")
-        status_lines.append(f"💾 RAM: {ram} ГБ")
+        status_lines.append(f"🖥️ OS: {uname.system} {uname.release} ({uname.machine})")
+        status_lines.append(f"🧠 CPU: {uname.processor} | Kernel(s): {cpu_count}")
+        status_lines.append(f"💾 RAM: {ram} GB")
     except Exception:
-        status_lines.append("🖥️ Системная информация: ошибка")
+        status_lines.append("🖥️ System info: unknown")
 
-    # Скорость интернета
+    # Speedtest
     if internet_available:
         try:
             st = speedtest.Speedtest()
             st.get_best_server()
             download = st.download() / 1_000_000  # Mbps
             upload = st.upload() / 1_000_000
-            status_lines.append(f"⬇️ Скорость загрузки: {download:.2f} Мбит/с")
-            status_lines.append(f"⬆️ Скорость выгрузки: {upload:.2f} Мбит/с")
+            status_lines.append(f"⬇️ Download: {download:.2f} Mbps")
+            status_lines.append(f"⬆️ Upload: {upload:.2f} Mbps")
         except Exception as e:
-            status_lines.append("📶 Скорость интернета: ошибка")
+            status_lines.append("📶 Speedtest: error")
     else:
-        status_lines.append("📶 Скорость интернета: нет интернета")
+        status_lines.append("📶 Speedtest: no internet")
 
     await message.edit("\n".join(status_lines))

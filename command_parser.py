@@ -15,12 +15,11 @@ class TransformerImpl(lark.Transformer):
         return items[0]
 
     def command(self, items):
-        command_name = items[1]
         args = {}
         for item in items[2:]:
             key, val = item
             args[key] = val
-        return {'__command__': command_name, **args}
+        return args
 
     def arg(self, items):
         return items[0], items[1]
@@ -28,7 +27,22 @@ class TransformerImpl(lark.Transformer):
     def CNAME(self, token):
         return str(token)
 
-    def ESCAPED_STRING(self, token):
+    def FUNCTION(self, token):
+        return str(token)
+
+    def COMMAND(self, token):
+        return str(token)
+
+    def VAR(self, token):
+        var = self._vars.get(str(token))
+        if var is None:
+            raise lark.exceptions.UnexpectedInput(f"Variable '{token}' not found")
+        return var
+
+    def ESCAPED_STRING_DOUBLE_QUOTES(self, token):
+        return token[1:-1]
+
+    def ESCAPED_STRING_SOLO_QUOTES(self, token):
         return token[1:-1]
 
     def TRUE(self, token):

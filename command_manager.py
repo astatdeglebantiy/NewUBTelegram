@@ -106,11 +106,14 @@ def register_handlers(client: pyrogram.Client, _manager: classes.Manager):
                 return
             print(parsed)
             text = parsed.get('text', None)
-            if text:
+            chat_id = parsed.get('chat_id', None)
+            if not chat_id:
+                parsed['chat_id'] = message.chat.id
+            if text is not None:
                 me = await client.get_me()
                 if message.from_user and message.from_user.id == me.id:
                     await message.delete()
-                await client.send_message(message.chat.id, str(text))
+                await client.send_message(**parsed)
             else:
                 await client.send_message(message.chat.id, 'No "text" provided')
         except Exception as e:

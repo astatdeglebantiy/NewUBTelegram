@@ -1,31 +1,40 @@
 %import common.CNAME
-%import common.ESCAPED_STRING
+%import common.LETTER
+%import common.DIGIT
+%import common.ESCAPED_STRING -> ESCAPED_STRING_DOUBLE_QUOTES
+%import common._STRING_ESC_INNER
 %import common.SIGNED_NUMBER
 %import common.WS
 %ignore WS
 
 PREFIX: "="
-FUNCTION_PREFIX: "!"
+FUNCTION_PREFIX: "+"
 SEP: ","
 OPEN: "("
 CLOSE: ")"
 
 ?start: command
 
-command: PREFIX CNAME arg*
-arg: CNAME "=" value
+command: PREFIX COMMAND arg*
+arg: COMMAND_ARGUMENT "=" value
 
 TRUE: "true"
 FALSE: "false"
 NONE: "none"
+COMMAND: CNAME
+FUNCTION: CNAME
+COMMAND_ARGUMENT: CNAME
+VAR: CNAME
+ESCAPED_STRING_SOLO_QUOTES: "'" _STRING_ESC_INNER "'"
 
 ?value: func_call
-      | ESCAPED_STRING
+      | ESCAPED_STRING_SOLO_QUOTES
+      | ESCAPED_STRING_DOUBLE_QUOTES
       | SIGNED_NUMBER
       | TRUE
       | FALSE
       | NONE
-      | CNAME
+      | VAR
 
-func_call: FUNCTION_PREFIX CNAME OPEN [arg_list] CLOSE
+func_call: FUNCTION_PREFIX FUNCTION OPEN [arg_list] CLOSE
 arg_list: value (SEP value)*

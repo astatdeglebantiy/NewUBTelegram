@@ -117,20 +117,6 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':return: nl.',
             function=lambda *_: '\n'
         ),
-        ('ESsStr','SEsStr',): classes.Function(
-            full_name='Enter/Space-Separated Space-Separated/Enter Simple string',
-            description='Converts arguments to strings, replaces literal nl (`\\n`) with actual nl, and joins them with spaces.\n'
-                        ':param args: Texts for general text.\n'
-                        ':return: Result of text processing.',
-            function=lambda *args: ' '.join(str(arg).replace('\\n', '\n') for arg in args)
-        ),
-        ('EsStr',): classes.Function(
-            full_name='Enter Simple string',
-            description='Converts arguments to strings, replaces literal nl (`\\n`) with an actual nl, and joins them without spaces.\n'
-                        ':param args: Texts for general text.\n'
-                        ':return: Result of text processing.',
-            function=lambda *args: ''.join('\n' if arg == '\\n' else str(arg) for arg in args)
-        ),
         ('eval',): classes.Function(
             full_name='Evaluate',
             description='A built-in function `eval` in Python, but only accepts text as an argument.\n'
@@ -180,13 +166,6 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
             full_name='Get attribute from object',
             description='A built-in function getattr in Python.',
             function=getattr
-        ),
-        ('getvar',): classes.Function(
-            full_name='Get variable',
-            description='Get variable from command parsers variables.\n'
-                        ':param key: Variable key.\n'
-                        ':return: Variable data.',
-            function=lambda key: _vars.get(key)
         ),
         ('github',): classes.Function(
             full_name='Project GitHub',
@@ -256,11 +235,6 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':return: Raw string representation.',
             function=lambda text: rf'{str(text)}'
         ),
-        ('s','space',): classes.Function(
-            full_name='Space Character',
-            description='Returns a single space character. Ignores any arguments.',
-            function=lambda *_: ' '
-        ),
         ('sdict',): classes.Function(
             full_name='Simple Dictionary from Arguments',
             description='Creates a dictionary from a sequence of arguments (key1, value1, key2, value2, ...).\n'
@@ -282,20 +256,6 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':param cmd: The command string to execute.\n'
                         ':return: Dictionary containing execution results.',
             function=shell
-        ),
-        ('SsStr',): classes.Function(
-            full_name='Space-Separated Simple String',
-            description='Converts all arguments to strings and joins them with spaces.\n'
-                        ':param args: Objects to convert to string and join.\n'
-                        ':return: A single string.',
-            function=lambda *args: ' '.join(str(arg) for arg in args)
-        ),
-        ('sStr',): classes.Function(
-            full_name='Simple String',
-            description='Converts all arguments to strings and concatenates them without spaces.\n'
-                        ':param args: Objects to convert to string and join.\n'
-                        ':return: A single string.',
-            function=lambda *args: ''.join(str(arg) for arg in args)
         ),
         ('str',): classes.Function(
             full_name='String',
