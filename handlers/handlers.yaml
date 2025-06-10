@@ -1,0 +1,44 @@
+send_сommand:
+  description: Just client.send_message function with some extra logic
+  logic: handlers\logic\send.py
+  group: 0
+
+send_files_command:
+  description: Just client.send_message function with some extra logic for files
+  logic: handlers\logic\send_files.py
+  group: 0
+
+send_photos_command:
+  description: Just client.send_message function with some extra logic for photos
+  logic: handlers\logic\send_photos.py
+  group: 0
+
+send_videos_command:
+  description: Just client.send_message function with some extra logic for videos
+  logic: handlers\logic\send_videos.py
+  group: 0
+
+white_list_command:
+  description: Add user to white list
+  logic: handlers\logic\white_list.py
+  group: 0
+
+black_list_command:
+    description: Add user to black list
+    logic: handlers\logic\black_list.py
+    group: 0
+
+status_command:
+  description: Get bot status
+  logic: handlers\logic\status.py
+  group: 0
+
+stop_command:
+  description: Stop bot
+  logic: handlers\logic\stop.py
+  group: 0
+
+none_command:
+  description: Do nothing
+  logic: handlers\logic\none.py
+  group: 0

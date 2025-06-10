@@ -1,13 +1,16 @@
 import json
 import os
+import yaml
 
 CONFIGS_PATH = 'configs/'
 DATA_PATH = 'data/'
 TEMP_PATH = 'temp/'
+HANDLERS_PATH = 'handlers/'
 MAIN_CONFIG_PATH = f'{CONFIGS_PATH}config.json'
 API_KEYS_PATH = f'{CONFIGS_PATH}api_keys.json'
 LEVEL_OF_ADMISSION_PATH = f'{DATA_PATH}levels_of_admission.json'
 WHITELIST_PATH = f'{DATA_PATH}whitelist.json'
+HANDLERS_YAML_PATH = f'{HANDLERS_PATH}handlers.yaml'
 
 
 def load(path: str, dir_path: str | None = None):
@@ -28,6 +31,11 @@ def save(obj, path: str, dir_path: str | None = None):
             pass
     with open(path, 'w') as f:
         return json.dump(obj, f)
+
+
+def load_yaml(path: str):
+    with open(path, encoding='utf-8') as f:
+        return yaml.safe_load(f)
 
 
 def load_whitelist() -> list[str]:

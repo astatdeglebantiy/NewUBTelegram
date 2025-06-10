@@ -4,6 +4,8 @@ from matplotlib import pyplot as plt
 import ai_gemini
 import classes
 import config
+import requests
+import hahameter
 
 
 matplotlib.use('Agg')
@@ -180,6 +182,13 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':return: Functions guide.',
             function=lambda page: get_functions_guide(functions, page),
         ),
+        ('hahameter',): classes.Function(
+            full_name='Hahameter',
+            description='Calculates a humor score for a given text using the hahameter library.\n'
+                        ':param text: The text to analyze.\n'
+                        ':return: Humor score as a float.',
+            function=lambda text: hahameter.get_score(text)
+        ),
         ('int',): classes.Function(
             full_name='Integer',
             description='A built-in function int in Python.',
@@ -235,6 +244,38 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':return: Raw string representation.',
             function=lambda text: rf'{str(text)}'
         ),
+        ('repr',): classes.Function(
+            full_name='String Representation',
+            description='A built-in function repr in Python. Returns a string representation of an object.\n'
+                        ':param obj: The object to represent.\n'
+                        ':return: String representation of the object.',
+            function=repr
+        ),
+        ('request',): classes.Function(
+            full_name='HTTP Request',
+            description='Performs an HTTP request using the requests library.\n'
+                        ':param method: HTTP method (GET, POST, etc.).\n'   
+                        ':param url: URL to request.\n'
+                        ':param headers: Optional headers for the request.\n'
+                        ':param data: Optional data for POST requests.\n'
+                        ':param json: Optional JSON data for POST requests.\n'
+                        ':return: Response object containing status code, headers, and content.',
+            function=lambda method, url, headers=None, data=None, json=None: requests.request(
+                method=method,
+                url=url,
+                headers=headers,
+                data=data,
+                json=json
+            ).__dict__
+        ),
+        ('round',): classes.Function(
+            full_name='Round Number',
+            description='Rounds a number to a specified number of decimal places.\n'
+                        ':param number: The number to round.\n'
+                        ':param ndigits: Number of decimal places to round to (default is 0).\n'
+                        ':return: Rounded number.',
+            function=lambda number, ndigits=0: round(number, ndigits)
+        ),
         ('sdict',): classes.Function(
             full_name='Simple Dictionary from Arguments',
             description='Creates a dictionary from a sequence of arguments (key1, value1, key2, value2, ...).\n'
@@ -261,6 +302,13 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
             full_name='String',
             description='A built-in function str in Python. Converts an object to its string representation.',
             function=str
+        ),
+        ('sum',): classes.Function(
+            full_name='Sum of Arguments',
+            description='Built-in function sum in Python. Sums up all provided arguments.\n'
+                        ':param args: Arguments to sum up.\n'
+                        ':return: Sum of all arguments.',
+            function=sum
         ),
         ('tab',): classes.Function(
             full_name='Tab Character',
@@ -299,21 +347,13 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':return: Boolean result of x is y.',
             function=lambda x, y: x is y
         ),
-        ('XLTY',): classes.Function(
-            full_name='X Less Than Y',
-            description='Checks if x is less than y (`x < y`).\n'
-                        ':param x: First value.\n'
-                        ':param y: Second value.\n'
-                        ':return: Boolean result of x < y.',
-            function=lambda x, y: x < y
-        ),
-        ('XNEY',): classes.Function(
-            full_name='X Not Equals Y (Inequality)',
-            description='Checks if x is not equal to y (`x != y`).\n'
-                        ':param x: First value.\n'
-                        ':param y: Second value.\n'
-                        ':return: Boolean result of x != y.',
-            function=lambda x, y: x != y
+        ('wttr',): classes.Function(
+            full_name='Weather Information',
+            description='Fetches weather information for a given city using `wttr.in`.\n'
+                        ':param info: Dictionary with information like {\'city\'=\'Kyiv\',\'format\'=4}, but you don\'t need to give this information.\n'
+                        ':return: Weather information as a string.',
+            function=lambda info: requests.get(f"https://wttr.in/{info.get('city') if type(info) == dict and info.get('city') else ''}"
+                                               f"{'?format='+info.get('format') if type(info) == dict and info.get('format') else '?format=4'}").text
         ),
     }
     return functions

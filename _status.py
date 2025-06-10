@@ -78,7 +78,7 @@ async def status_command(client, message: types.Message):
     except Exception:
         status_lines.append("💻 Local IP: unknown")
 
-    # Пинг
+    # Ping
     if internet_available:
         try:
             start = time.time()

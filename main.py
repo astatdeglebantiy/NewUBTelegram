@@ -6,7 +6,7 @@ import command_manager
 import classes
 import command_parser
 import functions
-import status
+import _status
 
 
 main_config = config.load(config.MAIN_CONFIG_PATH)
@@ -40,13 +40,14 @@ async def dotted_message(message: pyrogram.types.Message):
 
 @client.on_message(pyrogram.filters.command(commands='reload', prefixes=DEFAULT_COMMAND_PREFIX) & pyrogram.filters.me)
 async def reload_command(_, message: pyrogram.types.Message):
+    print('\n\nRELOADING...\n')
     new_message = await message.reply('Wait a minute')
     dotted_task = asyncio.create_task(dotted_message(new_message))
     global main_config
     try:
         importlib.reload(config)
         importlib.reload(functions)
-        importlib.reload(status)
+        importlib.reload(_status)
         importlib.reload(command_manager)
         importlib.reload(command_parser)
         main_config = config.load(config.MAIN_CONFIG_PATH)
@@ -61,6 +62,7 @@ async def reload_command(_, message: pyrogram.types.Message):
                 await dotted_task
             except asyncio.CancelledError:
                 pass
+            print(f'\nRELOAD ERROR: {e}\n\n')
             await new_message.edit(f'**Reload stopped with error:**```\n{e}```')
             return
     if dotted_task:
@@ -69,6 +71,7 @@ async def reload_command(_, message: pyrogram.types.Message):
             await dotted_task
         except asyncio.CancelledError:
             pass
+    print('\nRELOAD COMPLETE!\n\n')
     await new_message.edit('**Reload complete!**')
 
 
@@ -79,6 +82,7 @@ async def main():
     _manager = classes.Manager(client)
     command_manager.register_handlers(client, _manager)
     print(_manager.list_handlers())
+    print('\nUSERBOT STARTED!\n\n')
     await pyrogram.idle()
 
 client.run(main())
