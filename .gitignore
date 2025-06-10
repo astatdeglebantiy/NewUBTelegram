@@ -36,10 +36,10 @@ htmlcov/
 *.a
 *.o
 
-configs/api_keys.json
-data/*
+ubtg/configs/api_keys.json
+ubtg/data/*
 
 *.session-journal
 *.session
 
-temp/*
+ubtg/temp/*

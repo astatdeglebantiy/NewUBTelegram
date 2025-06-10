@@ -1,3 +1,4 @@
+import math
 import subprocess
 import matplotlib
 from matplotlib import pyplot as plt
@@ -205,6 +206,14 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
             description='Creates a list from the provided arguments.',
             function=lambda *args: list(args)
         ),
+        ('log',): classes.Function(
+            full_name='Logarithm',
+            description='Calculates the logarithm of a number with a specified base.\n'
+                        ':param x: The number to calculate the logarithm of.\n'
+                        ':param base: The base of the logarithm (default is 10).\n'
+                        ':return: Logarithm of x with the specified base.',
+            function=lambda x, base=10: math.log(x, base)
+        ),
         ('loop',): classes.Function(
             full_name='Loop Execution',
             description='Executes a callable x for n times and returns a list of results.\n'
@@ -322,30 +331,6 @@ def get_functions(_vars: dict | None) -> dict[tuple[str, ...], classes.Function]
                         ':param args: Arguments to compare.\n'
                         ':return: Boolean indicating uniformity.',
             function=lambda *args: all(arg == args[0] for arg in args) if args else None
-        ),
-        ('XEY',): classes.Function(
-            full_name='X Equals Y (Equality)',
-            description='Checks if x is equal to y (`x == y`).\n'
-                        ':param x: First value.\n'
-                        ':param y: Second value.\n'
-                        ':return: Boolean result of x == y.',
-            function=lambda x, y: x == y
-        ),
-        ('XGTY',): classes.Function(
-            full_name='X Greater Than Y',
-            description='Checks if x is greater than y (`x > y`).\n'
-                        ':param x: First value.\n'
-                        ':param y: Second value.\n'
-                        ':return: Boolean result of x > y.',
-            function=lambda x, y: x > y
-        ),
-        ('XIY',): classes.Function(
-            full_name='X Is Y (Identity)',
-            description='Checks if x is the same object as y (`x is y`).\n'
-                        ':param x: First object.\n'
-                        ':param y: Second object.\n'
-                        ':return: Boolean result of x is y.',
-            function=lambda x, y: x is y
         ),
         ('wttr',): classes.Function(
             full_name='Weather Information',

@@ -1,5 +1,5 @@
 import pyrogram
-import config
+from ubtg import config
 
 main_config = config.load(config.MAIN_CONFIG_PATH)
 DEFAULT_COMMAND_PREFIX = main_config['DEFAULT_COMMAND_PREFIX']

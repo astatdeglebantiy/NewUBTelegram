@@ -1,7 +1,6 @@
 import pyrogram
-import command_parser
-import config
-from handlers import filters
+from ubtg import config, command_parser
+from ubtg.handlers import filters
 
 main_config = config.load(config.MAIN_CONFIG_PATH)
 DEFAULT_COMMAND_PREFIX = main_config['DEFAULT_COMMAND_PREFIX']

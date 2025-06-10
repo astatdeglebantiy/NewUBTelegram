@@ -159,6 +159,8 @@ class TransformerImpl(lark.Transformer):
         elif type(items) is dict:
             items: dict
             return fn.function(**items) if items else fn.function()
+        elif not items:
+            return fn.function()
         else:
             raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
 

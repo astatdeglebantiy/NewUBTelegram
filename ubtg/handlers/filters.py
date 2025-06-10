@@ -1,5 +1,5 @@
 import pyrogram
-import config
+from ubtg import config
 
 
 async def is_in_whitelist(_, __, message) -> bool:

@@ -1,6 +1,5 @@
 import pyrogram
-import command_parser
-import config
+from ubtg import config, command_parser
 
 main_config = config.load(config.MAIN_CONFIG_PATH)
 DEFAULT_COMMAND_PREFIX = main_config['DEFAULT_COMMAND_PREFIX']
@@ -27,11 +26,11 @@ async def handler(client: pyrogram.Client, message: pyrogram.types.Message):
     if not _id:
         await message.reply('No information provided')
         return
-    if str(_id) in whitelist:
-        await message.reply('That user already been in whitelist')
+    if not str(_id) in whitelist:
+        await message.reply('That user already not been in whitelist')
         return
-    whitelist.append(str(_id))
+    whitelist.remove(str(_id))
     config.save_whitelist(whitelist)
     await message.reply('Complete!')
 
-handler_filter = pyrogram.filters.command(commands='white', prefixes=DEFAULT_COMMAND_PREFIX) & pyrogram.filters.me
+handler_filter = pyrogram.filters.command(commands='black', prefixes=config.load(config.MAIN_CONFIG_PATH)['DEFAULT_COMMAND_PREFIX']) & pyrogram.filters.me
