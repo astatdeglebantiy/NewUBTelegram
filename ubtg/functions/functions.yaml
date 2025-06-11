@@ -25,7 +25,7 @@ callKwargs:
 
 crossing_field:
     full_name: Crossing Field
-    description: LiSa - Crossing Field.
+    description: LiSA
     logic: functions/logic/crossing_field.py
 
 dict:
@@ -189,6 +189,11 @@ loop:
     type: list
     description: List of results after applying the function to each item.
   eval_logic: "lambda _vars_, iterable, function: [function(item) for item in iterable]"
+
+nya:
+  full_name: Nya
+  description: A function that returns path to a random anime image.
+  logic: functions/logic/safebooru.py
 
 pashalka:
   full_name: Pashalka
