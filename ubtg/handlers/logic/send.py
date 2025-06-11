@@ -16,7 +16,6 @@ async def handler(client: pyrogram.Client, message: pyrogram.types.Message):
         except Exception as e:
             await client.send_message(message.chat.id, f'```\n{str(e)}```')
             return
-        print(parsed)
         message_info = {
             'chat_id': parsed.get('chat_id', message.chat.id),
             'text': parsed.get('text', None),

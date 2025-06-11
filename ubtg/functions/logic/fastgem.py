@@ -1,7 +1,7 @@
 from ubtg import ai_gemini
 
 
-def _function(prompt: str | None=None, media: list[str] | None=None, system_prompt: str | None=None, model='gemini-2.0-flash', temperature: float=1.0, prompt_length: int=50):
+def _function(_vars_, prompt: str | None=None, media: list[str] | None=None, system_prompt: str | None=None, model='gemini-2.0-flash', temperature: float=1.0, prompt_length: int=50):
     text = ''
     if prompt and prompt_length > 0:
         short_prompt = (prompt[:int(prompt_length) - 3] + '...') if len(prompt) > int(prompt_length) else prompt

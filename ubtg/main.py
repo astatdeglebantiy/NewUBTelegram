@@ -3,9 +3,9 @@ import importlib
 import config
 import pyrogram
 import command_manager
+import function_manager
 import classes
 import command_parser
-import functions
 import _status
 
 
@@ -46,9 +46,9 @@ async def reload_command(_, message: pyrogram.types.Message):
     global main_config
     try:
         importlib.reload(config)
-        importlib.reload(functions)
         importlib.reload(_status)
         importlib.reload(command_manager)
+        importlib.reload(function_manager)
         importlib.reload(command_parser)
         main_config = config.load(config.MAIN_CONFIG_PATH)
         if _manager:

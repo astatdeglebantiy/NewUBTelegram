@@ -21,7 +21,6 @@ async def handler(_, message: pyrogram.types.Message):
             me = await _.get_me()
             if message.from_user and message.from_user.id == me.id:
                 await message.delete()
-            print(photos.items())
             media = [
                 pyrogram.types.InputMediaPhoto(media=path, caption=caption)
                 for caption, path in photos.items()

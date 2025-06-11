@@ -1,16 +1,11 @@
 import lark
-import classes
-import functions
-
-
-parser = lark.Lark(open('grammar.lark').read(), parser='lalr')
+from ubtg import function_manager
 
 
 class TransformerImpl(lark.Transformer):
     def __init__(self, _vars=None):
         super().__init__()
         self._vars = _vars or {}
-        self.functions = functions.get_functions(self._vars)
 
     def start(self, items):
         return items[0]
@@ -146,21 +141,18 @@ class TransformerImpl(lark.Transformer):
     def func_call(self, items):
         name = items[1]
         items = [item for item in items if not (isinstance(item, lark.Token) and item.type in ['FUNCTION_PREFIX', 'FUNCTION', 'OPEN', 'CLOSE'])][0]
-        fn = None
-        for aliases, f in self.functions.items():
-            if name in aliases:
-                fn = f
-                break
-        if type(fn) is not classes.Function:
-            raise lark.exceptions.UnexpectedInput(f'Function \'{name}\' not found')
+        try:
+            fn = function_manager.get_function_by_name(name)
+        except Exception as e:
+            raise lark.exceptions.UnexpectedInput(f'Error occurred: {e}')
         if type(items) is list:
             items: list
-            return fn.function(*items) if items else fn.function()
+            return fn.function(_vars_=self._vars, *items) if items else fn.function(_vars_=self._vars)
         elif type(items) is dict:
             items: dict
-            return fn.function(**items) if items else fn.function()
+            return fn.function(_vars_=self._vars, **items) if items else fn.function(_vars_=self._vars)
         elif not items:
-            return fn.function()
+            return fn.function(_vars_=self._vars)
         else:
             raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
 
@@ -172,5 +164,9 @@ class TransformerImpl(lark.Transformer):
 
 
 def parse_command(text: str, _vars=None):
+    parser = lark.Lark(open('grammar.lark').read(), parser='lalr')
     tree = parser.parse(text)
-    return TransformerImpl(_vars).transform(tree)
+    parsed = TransformerImpl(_vars).transform(tree)
+    print(f'Nonparsed: {text}')
+    print(f'Parsed: {parsed}\n')
+    return parsed

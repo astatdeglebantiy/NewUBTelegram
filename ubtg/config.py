@@ -6,11 +6,13 @@ CONFIGS_PATH = 'configs/'
 DATA_PATH = 'data/'
 TEMP_PATH = 'temp/'
 HANDLERS_PATH = 'handlers/'
+FUNCTIONS_PATH = 'functions/'
 MAIN_CONFIG_PATH = f'{CONFIGS_PATH}config.json'
 API_KEYS_PATH = f'{CONFIGS_PATH}api_keys.json'
 LEVEL_OF_ADMISSION_PATH = f'{DATA_PATH}levels_of_admission.json'
 WHITELIST_PATH = f'{DATA_PATH}whitelist.json'
 HANDLERS_YAML_PATH = f'{HANDLERS_PATH}handlers.yaml'
+FUNCTIONS_YAML_PATH = f'{FUNCTIONS_PATH}functions.yaml'
 
 
 def load(path: str, dir_path: str | None = None):
