@@ -11,7 +11,7 @@ call:
       description: Function to call.
     - name: args
       description: Arguments for the function.
-  eval_logic: "lambda function, *args: function(*args)"
+  eval_logic: "lambda _vars_, function, *args: function(*args)"
 
 callKwargs:
   full_name: Call with kwargs
@@ -21,7 +21,12 @@ callKwargs:
       description: Function to call.
     - name: kwargs
       description: Keyword arguments for the function.
-  eval_logic: "lambda function, **kwargs: function(**kwargs)"
+  eval_logic: "lambda _vars_, function, **kwargs: function(**kwargs)"
+
+crossing_field:
+    full_name: Crossing Field
+    description: LiSa - Crossing Field.
+    logic: functions/logic/crossing_field.py
 
 dict:
   full_name: Dictionary
@@ -183,7 +188,7 @@ loop:
   returns:
     type: list
     description: List of results after applying the function to each item.
-  eval_logic: "lambda iterable, function: [function(item) for item in iterable]"
+  eval_logic: "lambda _vars_, iterable, function: [function(item) for item in iterable]"
 
 pashalka:
   full_name: Pashalka
@@ -268,7 +273,7 @@ uniform:
   param_description:
     - name: args
       description: Arguments to check.
-  eval_logic: "lambda *args: all(arg == args[0] for arg in args)"
+  eval_logic: "lambda _vars_, *args: all(arg == args[0] for arg in args)"
 
 wttr:
   full_name: Weather
