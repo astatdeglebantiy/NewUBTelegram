@@ -1,5 +1,6 @@
 import lark
 from ubtg import function_manager
+from functions import response
 
 
 class TransformerImpl(lark.Transformer):
@@ -152,14 +153,19 @@ class TransformerImpl(lark.Transformer):
         try:
             if type(items) is list:
                 items: list
-                return fn.function(_vars_=self._vars, *items)
+                ret = fn.function(_vars_=self._vars, *items)
             elif type(items) is dict:
                 items: dict
-                return fn.function(_vars_=self._vars, **items)
+                ret = fn.function(_vars_=self._vars, **items)
             elif not items:
-                return fn.function(_vars_=self._vars)
+                ret = fn.function(_vars_=self._vars)
             else:
                 raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
+            if isinstance(ret, response.Response):
+                self._vars = getattr(ret, '_vars', self._vars)
+                return ret.value
+            else:
+                return ret
         except Exception as e:
             raise lark.exceptions.UnexpectedInput(f'Error occurred while calling function {name}: {e}')
 
