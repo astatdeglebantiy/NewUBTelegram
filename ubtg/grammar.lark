@@ -43,28 +43,30 @@ ESCAPED_STRING_SOLO_QUOTES: "'" _STRING_ESC_INNER "'"
       | var
 
 ?expr: value
-     | expr "+" expr   -> add
-     | expr "-" expr   -> sub
-     | expr "*" expr   -> mul
-     | expr "/" expr   -> div
-     | expr "%" expr   -> mod
-     | expr "**" expr  -> pow
-     | expr "==" expr  -> eq
-     | expr "!=" expr  -> not_eq
-     | expr "<" expr   -> less_than
-     | expr "<=" expr  -> less_than_or_eq
-     | expr ">" expr   -> greater_than
-     | expr ">=" expr  -> greater_than_or_eq
+     | expr "+" expr -> add
+     | expr "-" expr -> sub
+     | expr "*" expr -> mul
+     | expr "/" expr -> div
+     | expr "%" expr -> mod
+     | expr "**" expr -> pow
+     | expr "==" expr -> eq
+     | expr "!=" expr -> not_eq
+     | expr "<" expr -> less_than
+     | expr "<=" expr -> less_than_or_eq
+     | expr ">" expr -> greater_than
+     | expr ">=" expr -> greater_than_or_eq
      | expr "and" expr -> and_op
-     | expr "or" expr  -> or_op
+     | expr "or" expr -> or_op
      | "not" expr -> not_op
-     | expr "in" expr  -> in_op
+     | expr "in" expr -> in_op
      | expr "not in" expr -> not_in_op
-     | expr "is" expr  -> is_op
+     | expr "is" expr -> is_op
      | expr "is not" expr -> is_not_op
      | expr "if" expr "else" expr -> if_else
      | expr "?" expr ":" expr -> ternary
-     // | "log" "_" "{" expr "}" expr -> log       работает ультра херово, не рекомендую
+     | "[" expr ("," expr)* "]" -> list
+     | "{" expr ":" expr ("," expr ":" expr)* "}" -> dict
+     | "(" expr ")" -> paren_expr
 
 var: VARIABLE_PREFIX VAR
 func_call: FUNCTION_PREFIX FUNCTION OPEN [arg_list | kwarg_list] CLOSE

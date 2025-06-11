@@ -165,7 +165,25 @@ log:
       type: float
       default: "10"
       description: The base of the logarithm.
+  returns:
+    type: float
+    description: The logarithm of the number x with the specified base.
   logic: functions/logic/log.py
+
+loop:
+  full_name: Loop
+  description: A function that loops through a list and returns the results.
+  param_description:
+    - name: iterable
+      type: list
+      description: List to loop through.
+    - name: function
+      type: callable
+      description: Function to apply to each item in the list.
+  returns:
+    type: list
+    description: List of results after applying the function to each item.
+  eval_logic: "lambda iterable, function: [function(item) for item in iterable]"
 
 pashalka:
   full_name: Pashalka
@@ -209,18 +227,6 @@ round:
   full_name: Round
   description: A built-in function round in Python.
   eval_logic: round
-
-sdict:
-  full_name: Simple Dictionary
-  description: Creates a dictionary from a sequence of arguments (key1, value1, key2, value2, ...).
-  param_description:
-    - name: args
-      type: list
-      description: List of arguments in the form of key1, value1, key2, value2, ...
-  returns:
-    type: dict
-    description: Dictionary created from the arguments.
-  eval_logic: "lambda *args: dict(zip(args[::2], args[1::2]))"
 
 setvar:
   full_name: Set Variable

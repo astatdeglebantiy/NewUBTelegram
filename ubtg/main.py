@@ -1,5 +1,8 @@
 import asyncio
 import importlib
+import sys
+from pathlib import PurePath
+from importlib import util
 import config
 import pyrogram
 import command_manager
@@ -45,11 +48,15 @@ async def reload_command(_, message: pyrogram.types.Message):
     dotted_task = asyncio.create_task(dotted_message(new_message))
     global main_config
     try:
-        importlib.reload(config)
-        importlib.reload(_status)
-        importlib.reload(command_manager)
-        importlib.reload(function_manager)
-        importlib.reload(command_parser)
+        # reload modules
+        # not working
+
+        # for item in [config, _status, command_manager, function_manager, command_parser]:
+        #     module_name = PurePath(item.__file__).stem
+        #     spec = importlib.util.spec_from_file_location(module_name, item.__file__)
+        #     module = importlib.util.module_from_spec(spec)
+        #     spec.loader.exec_module(module)
+        #     sys.modules[module_name] = module
         main_config = config.load(config.MAIN_CONFIG_PATH)
         if _manager:
             _manager.clear_handlers()

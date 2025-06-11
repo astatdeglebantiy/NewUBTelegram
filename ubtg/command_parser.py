@@ -74,11 +74,6 @@ class TransformerImpl(lark.Transformer):
     def pow(self, items):
         return items[0] ** items[1]
 
-    def log(self, items):
-        if items[0] <= 0 or items[1] <= 0:
-            raise ValueError("Logarithm base and value must be greater than zero")
-        return items[1] ** (1 / items[0])
-
     def div(self, items):
         if items[1] == 0:
             raise ZeroDivisionError("Division by zero is not allowed")
@@ -138,6 +133,15 @@ class TransformerImpl(lark.Transformer):
     def ternary(self, items):
         return items[0] if items[1] else items[2]
 
+    def list(self, items):
+        return items
+
+    def dict(self, items):
+        return dict(zip(items[::2], items[1::2]))
+
+    def paren_expr(self, items):
+        return items[0]
+
     def func_call(self, items):
         name = items[1]
         items = [item for item in items if not (isinstance(item, lark.Token) and item.type in ['FUNCTION_PREFIX', 'FUNCTION', 'OPEN', 'CLOSE'])][0]
@@ -145,16 +149,19 @@ class TransformerImpl(lark.Transformer):
             fn = function_manager.get_function_by_name(name)
         except Exception as e:
             raise lark.exceptions.UnexpectedInput(f'Error occurred: {e}')
-        if type(items) is list:
-            items: list
-            return fn.function(_vars_=self._vars, *items) if items else fn.function(_vars_=self._vars)
-        elif type(items) is dict:
-            items: dict
-            return fn.function(_vars_=self._vars, **items) if items else fn.function(_vars_=self._vars)
-        elif not items:
-            return fn.function(_vars_=self._vars)
-        else:
-            raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
+        try:
+            if type(items) is list:
+                items: list
+                return fn.function(_vars_=self._vars, *items)
+            elif type(items) is dict:
+                items: dict
+                return fn.function(_vars_=self._vars, **items)
+            elif not items:
+                return fn.function(_vars_=self._vars)
+            else:
+                raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
+        except Exception as e:
+            raise lark.exceptions.UnexpectedInput(f'Error occurred while calling function {name}: {e}')
 
     def arg_list(self, items):
         return [item for item in items if not (isinstance(item, lark.Token) and item.type == 'SEP')]
