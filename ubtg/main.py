@@ -1,15 +1,8 @@
 import asyncio
-import importlib
-import sys
-from pathlib import PurePath
-from importlib import util
 import config
 import pyrogram
 import command_manager
-import function_manager
 import classes
-import command_parser
-import _status
 
 
 main_config = config.load(config.MAIN_CONFIG_PATH)
