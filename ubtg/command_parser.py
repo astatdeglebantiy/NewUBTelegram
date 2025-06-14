@@ -4,7 +4,7 @@ from functions import response
 
 
 class TransformerImpl(lark.Transformer):
-    def __init__(self, _vars=None):
+    def __init__(self, _vars: dict | None=None):
         super().__init__()
         self._vars = _vars or {}
 
@@ -153,12 +153,21 @@ class TransformerImpl(lark.Transformer):
         try:
             if type(items) is list:
                 items: list
-                ret = fn.function(_vars_=self._vars, *items)
+                if fn.need_vars is True:
+                    ret = fn.function(self._vars, *items)
+                else:
+                    ret = fn.function(*items)
             elif type(items) is dict:
                 items: dict
-                ret = fn.function(_vars_=self._vars, **items)
+                if fn.need_vars is True:
+                    ret = fn.function(self._vars, **items)
+                else:
+                    ret = fn.function(**items)
             elif not items:
-                ret = fn.function(_vars_=self._vars)
+                if fn.need_vars is True:
+                    ret = fn.function(self._vars)
+                else:
+                    ret = fn.function()
             else:
                 raise lark.exceptions.UnexpectedInput(f'Invalid function call: {name}({items})')
             if isinstance(ret, response.Response):
@@ -167,7 +176,7 @@ class TransformerImpl(lark.Transformer):
             else:
                 return ret
         except Exception as e:
-            raise lark.exceptions.UnexpectedInput(f'Error occurred while calling function {name}: {e}')
+            raise lark.exceptions.UnexpectedInput(f'Error occurred while calling function "{name}": {e}')
 
     def arg_list(self, items):
         return [item for item in items if not (isinstance(item, lark.Token) and item.type == 'SEP')]
@@ -176,7 +185,7 @@ class TransformerImpl(lark.Transformer):
         return (lambda x: dict(zip(x[::2], x[1::2])))([item for item in items if not (isinstance(item, lark.Token) and item.type in ['SEP', 'EQ_ARG_FUNC'])])
 
 
-def parse_command(text: str, _vars=None):
+def parse_command(text: str, _vars: dict | None=None):
     parser = lark.Lark(open('grammar.lark').read(), parser='lalr')
     tree = parser.parse(text)
     parsed = TransformerImpl(_vars).transform(tree)

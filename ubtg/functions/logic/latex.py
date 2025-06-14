@@ -4,7 +4,6 @@ from ubtg import config
 
 
 def _function(
-        _vars_,
         text: str,
         font_size: int = 30,
         transparent: bool = False,

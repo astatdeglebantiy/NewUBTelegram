@@ -35,8 +35,9 @@ class Manager:
 
 
 class Function:
-    def __init__(self, full_name: str, description: str, function: Callable, param_description: list | None = None):
+    def __init__(self, full_name: str, description: str, function: Callable, need_vars: bool = False, param_description: list | None = None):
         self.full_name = full_name
         self.description = description
         self.function = function
+        self.need_vars = need_vars
         self.param_description = param_description

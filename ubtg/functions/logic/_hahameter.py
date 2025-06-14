@@ -1,5 +1,5 @@
 import hahameter
 
 
-def _function(_vars_, text: str):
+def _function(text: str):
     return hahameter.get_score(text) if hahameter.is_haha(text) else 0.0

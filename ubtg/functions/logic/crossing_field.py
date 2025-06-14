@@ -1,4 +1,4 @@
-def _function(_vars_):
+def _function():
     return \
 """
 

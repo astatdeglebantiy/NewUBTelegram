@@ -1,7 +1,14 @@
 abs:
   full_name: Absolute
   description: A built-in function abs in Python.
+  need_vars: false
   eval_logic: abs
+
+await:
+  full_name: Await
+  description: A built-in function await in Python.
+  need_vars: false
+  logic: functions/logic/await.py
 
 call:
   full_name: Call
@@ -11,7 +18,8 @@ call:
       description: Function to call.
     - name: args
       description: Arguments for the function.
-  eval_logic: "lambda _vars_, function, *args: function(*args)"
+  need_vars: false
+  eval_logic: "lambda function, *args: function(*args)"
 
 callKwargs:
   full_name: Call with kwargs
@@ -21,26 +29,31 @@ callKwargs:
       description: Function to call.
     - name: kwargs
       description: Keyword arguments for the function.
-  eval_logic: "lambda _vars_, function, **kwargs: function(**kwargs)"
+  need_vars: false
+  eval_logic: "lambda function, **kwargs: function(**kwargs)"
 
 crossing_field:
     full_name: Crossing Field
     description: LiSA
+    need_vars: false
     logic: functions/logic/crossing_field.py
 
 dict:
   full_name: Dictionary
   description: A built-in function dict in Python.
+  need_vars: false
   eval_logic: dict
 
 eval:
   full_name: Eval
   description: A built-in function eval in Python.
+  need_vars: false
   eval_logic: eval
 
 exec:
   full_name: Exec
   description: A built-in function exec in Python.
+  need_vars: false
   eval_logic: exec
 
 fastgem:
@@ -71,11 +84,13 @@ fastgem:
       type: int
       default: "50"
       description: Length of the prompt to show in the message.
+  need_vars: false
   logic: functions/logic/fastgem.py
 
 float:
   full_name: Float
   description: A built-in function float in Python.
+  need_vars: false
   eval_logic: float
 
 get:
@@ -92,16 +107,19 @@ get:
       type: Any | None
       default: None
       description: Default value to return if the key is not found.
+  need_vars: false
   logic: functions/logic/get.py
 
 getattr:
   full_name: Get Attribute
   description: A built-in function getattr in Python.
+  need_vars: false
   eval_logic: getattr
 
 github:
   full_name: GitHub
   description: A function that returns a link to the GitHub repository.
+  need_vars: false
   eval_logic: "lambda *_: 'https://github.com/astatdeglebantiy/NewUBTelegram'"
 
 hahameter:
@@ -114,16 +132,19 @@ hahameter:
   returns:
     type: float
     description: Haha score (0.0 -> 1.0).
+  need_vars: false
   logic: functions/logic/_hahameter.py
 
 int:
   full_name: Integer
   description: A built-in function int in Python.
+  need_vars: false
   eval_logic: int
 
 isinstance:
   full_name: Is Instance
   description: A built-in function isinstance in Python.
+  need_vars: false
   eval_logic: isinstance
 
 latex:
@@ -152,11 +173,13 @@ latex:
   returns:
     type: str
     description: Path to the generated image.
+  need_vars: false
   logic: functions/logic/latex.py
 
 list:
   full_name: List
   description: A built-in function list in Python.
+  need_vars: false
   eval_logic: list
 
 log:
@@ -173,6 +196,7 @@ log:
   returns:
     type: float
     description: The logarithm of the number x with the specified base.
+  need_vars: false
   logic: functions/logic/log.py
 
 loop:
@@ -188,21 +212,34 @@ loop:
   returns:
     type: list
     description: List of results after applying the function to each item.
-  eval_logic: "lambda _vars_, iterable, function: [function(item) for item in iterable]"
+  need_vars: false
+  eval_logic: "lambda iterable, function: [function(item) for item in iterable]"
 
 nya:
   full_name: Nya
   description: A function that returns path to a random anime image.
+  returns:
+    type: str
+    description: Path to a random anime image.
+  need_vars: false
   logic: functions/logic/safebooru.py
 
 pashalka:
   full_name: Pashalka
   description: Bo.
+  need_vars: false
   eval_logic: "lambda *_: 'LJEDMITRII CUЩECTBUET'"
+
+pyrogram:
+  full_name: Pyrogram
+  description: A function that returns pyrogram module.
+  need_vars: false
+  logic: functions/logic/_pyrogram.py
 
 repr:
   full_name: Representation
   description: A built-in function repr in Python.
+  need_vars: false
   eval_logic: repr
 
 request:
@@ -231,11 +268,13 @@ request:
   returns:
     type: dict
     description: Response object containing status code, headers, content, etc.
+  need_vars: false
   logic: functions/logic/request.py
 
 round:
   full_name: Round
   description: A built-in function round in Python.
+  need_vars: false
   eval_logic: round
 
 setvar:
@@ -248,6 +287,7 @@ setvar:
     - name: value
       type: Any
       description: Value to set for the variable.
+  need_vars: true
   logic: functions/logic/setvar.py
 
 shell:
@@ -260,16 +300,19 @@ shell:
   returns:
     type: str
     description: Dictionary containing execution results.
+  need_vars: false
   logic: functions/logic/shell.py
 
 str:
   full_name: String
   description: A built-in function str in Python.
+  need_vars: false
   eval_logic: str
 
 sum:
   full_name: Sum
   description: A built-in function sum in Python.
+  need_vars: false
   eval_logic: sum
 
 uniform:
@@ -278,7 +321,8 @@ uniform:
   param_description:
     - name: args
       description: Arguments to check.
-  eval_logic: "lambda _vars_, *args: all(arg == args[0] for arg in args)"
+  need_vars: false
+  eval_logic: "lambda *args: all(arg == args[0] for arg in args)"
 
 wttr:
   full_name: Weather
@@ -295,4 +339,5 @@ wttr:
   returns:
     type: str
     description: Weather report for the specified city.
+  need_vars: false
   logic: functions/logic/wttr.py

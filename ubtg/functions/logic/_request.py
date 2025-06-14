@@ -1,7 +1,7 @@
 import requests
 
 
-def _function(_vars_, url: str, method: str = 'GET', headers: dict | None = None, data: dict | None = None, json: dict | None = None) -> dict:
+def _function(url: str, method: str = 'GET', headers: dict | None = None, data: dict | None = None, json: dict | None = None) -> dict:
     headers = headers or {}
     data = data or {}
     json = json or {}

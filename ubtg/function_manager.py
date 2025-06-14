@@ -26,8 +26,16 @@ def get_function_by_name(function_name: str) -> classes.Function | None:
             logic_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(logic_module)
             sys.modules[module_name] = logic_module
-            _function = getattr(logic_module, '_function', None)
-            ret = classes.Function(info.get('full_name', function_name), info.get('description', 'No description yet'), _function, info.get('param_description', None))
+            _function = getattr(logic_module, '_function')
+            if not callable(_function):
+                raise ValueError(f'Function "{function_name}" is not callable.')
+            ret = classes.Function(
+                full_name=info.get('full_name') or function_name,
+                description=info.get('description') or 'No description yet',
+                function=_function,
+                need_vars=info.get('need_vars') or False,
+                param_description=info.get('param_description')
+            )
             print(f'Successfully imported function:    {ret.full_name} ({function_name}) - {ret.description}\n')
             return ret
         except Exception as e:
